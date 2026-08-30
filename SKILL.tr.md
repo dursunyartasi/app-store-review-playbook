@@ -25,14 +25,14 @@ Sonra eşleşen dosyaya git. Yalnız onu oku.
 
 | Yanıt | Oku |
 |---|---|
-| yeni prototip | `references/01-prototype.md` |
-| derleme / TestFlight | `references/02-testflight-ios.md` |
-| Google Play | `references/03-google-play.md` |
-| incelemeye gönderme | `references/04-app-store-submission.md` |
+| yeni prototip | `references/tr/01-prototip.md` |
+| derleme / TestFlight | `references/tr/02-testflight-ios.md` |
+| Google Play | `references/tr/03-google-play.md` |
+| incelemeye gönderme | `references/tr/04-app-store-gonderim.md` |
 | red yedim | `references/tr/05-redler.md` |
 | arka uç, veritabanı, e-posta | `references/tr/06-yigin.md` |
 
-> Not: Red kataloğu ve yığın belgesinin Türkçesi var; adım adım süreç rehberleri (01–04) şimdilik yalnız İngilizce. İçerik aynı, çeviri bekliyor.
+Türkçe çeviri tamdır. İngilizce karşılıkları `references/` altında; İngilizce sürüm kanoniktir.
 
 ## Yanıtlar neyi değiştiriyor
 

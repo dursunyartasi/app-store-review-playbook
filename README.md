@@ -33,7 +33,7 @@ references/
   04-app-store-submission.md          metadata, age rating, privacy, review notes, resubmission
   05-rejections.md                    the catalogue: 15 rejections with root causes
   06-stack.md                         the infrastructure underneath, and how it broke
-  tr/                                 Turkish: rejection catalogue and stack notes
+  tr/                                 full Turkish translation of all six
 ```
 
 You read one file, not all of them.
@@ -72,7 +72,7 @@ git clone https://github.com/dursunyartasi/app-store-review-playbook.git \
 
 Claude Code picks it up next session. It triggers on submission and rejection topics on its own, or invoke it explicitly with `/mobile-app-shipping`.
 
-For Turkish, copy `SKILL.tr.md` over `SKILL.md` in a separate skill directory. The rejection catalogue and stack notes are translated; the four step-by-step process guides are English-only for now.
+For Turkish, copy `SKILL.tr.md` over `SKILL.md` in a separate skill directory — the Turkish translation is complete.
 
 Not using Claude Code? Start at [SKILL.md](SKILL.md) and follow the table.
 
@@ -84,6 +84,19 @@ Not using Claude Code? Start at [SKILL.md](SKILL.md) and follow the table.
 - **Dated to 2026.** Store guidelines move, and Apple changed the age bands in 2025 alone. Treat specific guideline numbers as a place to start your own reading, not as current law.
 - **It is not exhaustive.** It covers what we hit. We never had a 4.3 spam rejection or a Play policy violation, so there is nothing here about either.
 - **It is opinionated about a stack** — Expo, Coolify, PostgreSQL, Brevo. Most of the store material applies whatever you use; the infrastructure notes are specific.
+
+## Translations
+
+English is canonical. Translations live in `references/<lang>/` with a matching `SKILL.<lang>.md` router, and are currently:
+
+| Language | Status |
+|---|---|
+| English | canonical |
+| Türkçe | complete |
+
+**Translations may lag.** When a new rejection lands, English is updated first. If you read a translation and something looks thin, check the English file — and a PR closing the gap is welcome.
+
+To add a language: copy `references/` to `references/<lang>/`, translate the six files plus the router, and keep commands, error codes and guideline numbers exactly as they are. Those are strings people search for; translating them makes the file useless.
 
 ## Contributing
 
