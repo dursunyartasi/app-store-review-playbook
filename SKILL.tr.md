@@ -8,7 +8,7 @@ metadata:
 
 # App Store & Play inceleme rehberi
 
-Bu dosya genel mağaza tavsiyesi değil. Her madde sekiz uygulamanın yayın sürecinde **gerçekten yaşandı** ve sonunda bulunan kök nedeniyle birlikte yazıldı. Uygulamalar anonim: **A Uygulaması** (sosyal etkinlik), **B Uygulaması** (harita/mekan rehberi), **C Uygulaması** (Expo tüketici uygulaması).
+Bu dosya genel mağaza tavsiyesi değil. Her madde sekiz uygulamanın yayın sürecinde **gerçekten yaşandı** ve sonunda bulunan kök nedeniyle birlikte yazıldı. Uygulamalar anonim: **A Uygulaması** (sosyal etkinlik), **B Uygulaması** (harita/mekan rehberi), **C Uygulaması** (B2B ajans aracı).
 
 **Kullanım:** Gönderimden önce "Gönderim öncesi kontrol listesi"ni uygula. Red geldiyse "Red kataloğu"ndan eşleşeni bul. Build/yükleme takılıyorsa "Build ve yükleme tuzakları"na bak.
 
@@ -35,9 +35,14 @@ Ek: **ASC review notes sınırı 4000 karakter.** Aşarsan API 409 verir.
 Her madde bir redden geliyor. Gönderimden önce tek tek doğrula.
 
 ### Hesap ve veri (5.1.1)
-- [ ] **Hesap silme var mı?** Hesap açılabiliyorsa uygulama İÇİNDEN silinebilmeli — 5.1.1(v). Onay + "geri alınamaz" uyarısı. *(İki uygulamamızda red sebebi oldu.)*
+- [ ] **Hesap silme var mı?** Hesap açılabiliyorsa uygulama İÇİNDEN silinebilmeli — 5.1.1(v). *(İki uygulamamızda red sebebi oldu.)* Kabul edilen akış şu şartları taşıyordu, hepsi gerekli:
+  - **Anında ve kalıcı.** Deaktivasyon yok, bekleme süresi yok.
+  - **Destek/e-posta/telefon adımı yok, web'e yönlendirme yok** — Apple bunları "uygulama içinden silinemiyor" sayıyor.
+  - Şifreyle yeniden kimlik doğrulama + yıkıcı (destructive) onay uyarısı.
+  - Neyin silineceği açıkça listeleniyor; üçüncü taraf izinleri (Instagram/Facebook) platform tarafında da revoke ediliyor.
 - [ ] **İzin metinleri (purpose strings) doğru mu?** — 5.1.1(ii). **Bare workflow tuzağı:** `ios/` klasörü repoda ise `app.json`'daki purpose string'ler Info.plist'e OTOMATİK GİTMEZ; Info.plist'i elle kontrol et.
 - [ ] **Kullanmadığın izni isteme.** B Uygulaması 5.1.1'den reddedildi: `pickImage` galeriyi açmadan önce tüm kütüphane izni istiyordu. Modern iOS PHPicker izinsiz tek foto seçtirir → **izin çağrısını kaldır**.
+- [ ] **Yasal bağlantılar TIKLANABİLİR mi?** — 2.1(a). C Uygulaması build 26 buradan reddedildi: kayıt ekranındaki "Kullanım Koşulları'nı kabul etmiş olursun" cümlesi **düz metindi**, giriş ekranında ise hiç yoktu; reviewer koşulları görüntüleyemedi. Bağlantılar **uygulama içi tarayıcıda** açılmalı (`expo-web-browser`), kullanıcı Safari'ye atılmamalı. Giriş ekranında da bulunmalı.
 - [ ] **Konum izni priming ekranı** — 5.1.1(iv). Yönlendirici kelime kullanma: "Konumumu Kullan" ❌ → "Devam Et" ✅. Kafa karıştıran çift "Atla" olmasın.
 
 ### İçerik ve topluluk (1.2) — kullanıcı içeriği varsa ZORUNLU
@@ -46,6 +51,12 @@ A Uygulaması build 51 buradan reddedildi. Dördü birden gerekiyor:
 - [ ] Engelleme (iki yönlü — engellenen yazamaz).
 - [ ] İçerik filtresi — **yazma uçlarının TAMAMINDA**, sadece birkaçında değil.
 - [ ] DM'de sohbet isteği/kabul akışı: başlatan taraf kabul gelene dek tek mesaj.
+
+### Satın alma sinyalleri (3.1.1) — B2B / ücretsiz uygulamalarda en sinsi tuzak
+C Uygulaması bu maddeden **iki kez** reddedildi.
+- [ ] **Uygulamada fiyat, plan adı, kredi sayacı, paywall, yükseltme butonu veya dışarıya satın alma yönlendirmesi kalmasın.** Build 25'i düşüren şey "Mevcut planında Intelligence yok — en az Solo plan gerekli" metni, kalan kredi sayacı ve "1 kredi/marka" ibaresiydi. Plan adı göstermek bile yeter.
+- [ ] **3.1.3(f) "Free Stand-alone Apps" argümanını tek başına kullanma — Apple kabul etmedi.** Build 26'da denendi, reddedildi.
+- [ ] **Uygulamada herkese açık kayıt ekranı varsa B2B iddian çöker.** Zayıf halka buydu: "katıl" ekranı reviewer'a tüketiciye self-servis satış izlenimi veriyor ve 3.1.3(c)'nin *"only sold directly by you to organizations"* şartıyla çelişiyor. Çözüm build 27'de kayıt ekranını **tamamen silmek** oldu — uygulama yalnız giriş sunuyor.
 
 ### Metadata
 - [ ] **Yaş derecelendirme** — 2.3.6. "Tanışma/networking" içeren uygulamada `matureOrSuggestiveThemes` en az `INFREQUENT_OR_MILD` olmalı. ASC API ile düzeltilebilir: `PATCH /v1/ageRatingDeclarations/{id}`.
@@ -85,11 +96,28 @@ A Uygulaması build 51 buradan reddedildi. Dördü birden gerekiyor:
 | **5.1.1(iv)** Konum akışı | priming ekranı yönlendirici | Buton metinleri + çift Atla | "Devam Et", tek çıkış |
 | **5.1.1** Foto erişimi | galeri izni istiyor | PHPicker izin gerektirmiyordu | İzin çağrısı kaldırıldı |
 | **4.0.0** Tasarım | "not integrated with built-in mapping" | Yalnız Google Maps'e yönlendirme | Apple Haritalar seçeneği |
+| **3.1.1** IAP | satın alma sinyalleri | Plan adı, kredi sayacı, "Solo plan gerekli" metni | Tüm fiyat/plan izleri kaldırıldı |
+| **3.1.1** IAP (2. kez) | aynı madde tekrar | 3.1.3(f) argümanı yetmedi; **açık kayıt ekranı** B2B iddiasını çürütüyordu | Kayıt ekranı tamamen silindi, yalnız giriş |
+| **2.1(a)** App Completeness | koşullar görüntülenemedi | Yasal metin düz yazıydı, tıklanamıyordu; giriş ekranında hiç yoktu | Uygulama içi tarayıcıda açılan tıklanabilir bağlantılar |
 | **Play** (üretim) | gönderim reddi | Gizlilik politikası URL'si 404 | Kalıcı takma ad + konsol kaydı düzeltildi |
 
 **Not:** Bir redi çözerken bir sonrakini davet edebilirsin. Bir uygulamada 4 ardışık red oldu, bir diğerinde 3. Her düzeltmeden sonra listenin TAMAMINI yeniden gözden geçir.
 
 ---
+
+## App Store Connect API ve beyan tuzakları
+
+Gönderim alanlarını API'den doldururken çıkanlar:
+
+- **`APP_IPHONE_69` diye bir tip YOK.** API'nin en büyük iPhone ekran tipi `APP_IPHONE_67` (1290×2796). 6.9" için üretilen **1320×2868 görseller reddedilir** — 6.7" yükle, Apple büyük cihazlara kendi ölçekler.
+- **`whatsNew` ilk sürümde düzenlenemez** — 409 "cannot be edited at this time". Yalnız güncellemelerde var.
+- **Yaş sınırı alanlarının tipleri karışık:** bazıları BOOLEAN (`messagingAndChat`, `userGeneratedContent`, `advertising`), bazıları STRING enum (`contests`, `profanityOrCrudeHumor` → `NONE`/`INFREQUENT_OR_MILD`/`FREQUENT_OR_INTENSE`). Yanlış tip 409 döner; hata mesajı doğru kümeyi söyler.
+- **Apple 2025'te yaş bandlarını değiştirdi: 12+ ARTIK YOK.** Bandlar 4+, 9+, 13+, 16+, 18+. Anket doğru cevaplarla 4+ üretebilir; üste çekmek için `ageRatingOverrideV2` (ör. `THIRTEEN_PLUS`).
+
+**App Privacy beyanı:**
+- **Ulusal kimlik numarası "Hassas Bilgi" değil.** Apple'ın hassas tanımı ırk/din/cinsel yönelim/biyometri sayar; kimlik numarası orada yok → **"Diğer Veri Türleri"** doğru kova.
+- **IBAN'ı kendi veritabanında tutuyorsan "Toplanıyor" beyan et.** Apple yalnızca ödeme sağlayıcısı tutuyor ve sen erişemiyorsan muaf tutuyor.
+- ⚠️ **Kör tıklama tuzağı:** beyan sihirbazı veri türüne göre farklı yükseklikte açılıyor. Aynı koordinatlara arka arkaya tıklamak "Kullanıcı Kimliği takip için kullanılıyor: EVET" gibi **yanlış** cevaplar üretti. Her kalemde son ekranı ekran görüntüsüyle doğrula.
 
 ## Build ve yükleme tuzakları
 
@@ -104,6 +132,8 @@ A Uygulaması build 51 buradan reddedildi. Dördü birden gerekiyor:
   `.p8` anahtarı `~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8` altında olmalı — altool oradan okur. 15 saniyede bitiyor.
 - **"Upload succeeded" ≠ kabul edildi.** Apple işleme aşamasında da reddedebilir; VALID durumunu izle. VALID olunca eski build'i expire et (`PATCH /v1/builds/{id}` `{expired:true}`).
 - **Watch / widget hedefine ikon şart** (`CFBundleIconName`) — yoksa Apple yüklemeyi hata **90713** ile reddeder.
+- **ITMS-90062** = "bu sürüm zaten yayında" → sürüm dizesini yükselt.
+- **ITMS-90863** (Apple Silicon Mac sembol uyarısı) Expo uygulamalarında **normaldir, reddetmez** — panikleme.
 
 ### Yeniden gönderim (resubmit) sırası
 1. Aynı anda **iki sürüm incelenemez** — önce mevcut `reviewSubmission`'ı iptal et (`canceled=true`), CANCELING→COMPLETE bekle.
@@ -130,12 +160,20 @@ A Uygulaması build 51 buradan reddedildi. Dördü birden gerekiyor:
 
 ---
 
+### Play sürüm hataları
+- **"Bu sürüm, mevcut kullanıcıların yeni eklenen uygulama paketlerine geçmelerine izin vermediği için kullanıma sunulamaz."** → sürüm kodunu artır, ya da (önerilen) İç Test / Kapalı Test kanalını kullan.
+- **"Bu sürüm hiçbir uygulama paketi eklemiyor veya kaldırmıyor."** → AAB düzgün yüklenmemiş; sürüm kodunu kontrol et ve yeniden yükle.
+- **Native debug sembolleri** `native-debug-symbols.zip` içinde ABI klasörleriyle olmalı (`armeabi-v7a/`, `arm64-v8a/`, `x86_64/`, her birinde `libapp.so`). ZIP'te `__MACOSX` veya `.DS_Store` olmamalı.
+- ⚠️ **Hedef API düzeyi son tarihi.** Play belirli bir tarihe kadar hedef API düzeyini yükseltmeyen uygulamalarda **güncelleme yayınlamayı engelliyor** (bize bir son-tarih uyarısı geldi). Takvimini takip et — sürüm gününde öğrenmek istemezsin.
+- **AD_ID nüansı:** Firebase Analytics kullanıyorsan izin manifest'te olmalı ve beyan "kullanılıyor" demeli; reklamın yoksa izin de beyan da olmamalı. **Kural: beyan manifest'le birebir tutarlı olsun** — iki yönde de hata yayını kilitliyor.
+
 ## Mağaza kaydı — bir kerelik, elle
 
 - **App Store Connect'te uygulama kaydı API ile AÇILAMIYOR** (denendi, doğrulandı). Tarayıcıdan elle.
 - **Play Console'da uygulama oluşturma da ilk seferde elle** zorunlu.
 - **Bundle ID kayda kalıcı bağlanır, değiştirilemez.**
 - **Play'de "Ücretsiz" seçimi yayından sonra ücretliye ÇEVRİLEMEZ.**
+- ⚠️ **Türkçe karakterler kayıtta düşebiliyor.** Bireysel Apple hesabında App Store'da görünen geliştirici adı = yasal ad. Bizde Türkçe "ş" ve "ı" harfleri kayıt sırasında düşmüştü. ASC → Business → Legal Entity'den düzeltmek **çalışmıyor**: akış adres doğrulama + Paid Apps Agreement zincirine giriyor ve isim tek başına kaydedilmiyor. Doğru yol Apple Support → "Membership & Account" → yasal ad düzeltme talebi (kimlik doğrulamalı). **Kayıt sırasında adını harfi harfine kontrol et.**
 - Play Console'da uygulama-içi sayfaların gerçek yolu `app-content/**` (ör. `app-content/ad-id-declaration`); tek başına `/app-content` app listesine yönlendirir.
 
 ## Bu rehberi yürüten yapay zekâ asistanı için sınırlar

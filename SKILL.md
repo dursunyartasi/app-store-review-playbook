@@ -8,7 +8,7 @@ metadata:
 
 # App Store & Play review playbook
 
-Not generic store advice. Every item below is a rejection that actually happened while shipping eight apps, with the root cause we eventually found. Apps are anonymised as **App A** (social events), **App B** (map/venue guide), **App C** (Expo consumer app).
+Not generic store advice. Every item below is a rejection that actually happened while shipping eight apps, with the root cause we eventually found. Apps are anonymised as **App A** (social events), **App B** (map/venue guide), **App C** (B2B agency tool).
 
 **How to use:** run the pre-submission checklist before you submit. If you got rejected, find the match in the rejection catalogue. If a build or upload is stuck, check the traps section.
 
@@ -35,9 +35,14 @@ Also: **App Store Connect review notes are capped at 4000 characters.** Exceed i
 Every box below comes from a rejection. Verify them one by one.
 
 ### Accounts and data (5.1.1)
-- [ ] **Account deletion.** If users can create an account, they must be able to delete it from inside the app — 5.1.1(v). Confirmation plus an "irreversible" warning. *(Caused rejections in two of our apps.)*
+- [ ] **Account deletion.** If users can create an account, they must be able to delete it from inside the app — 5.1.1(v). *(Caused rejections in two of our apps.)* The flow Apple finally accepted met all of these, and each one matters:
+  - **Immediate and permanent.** No deactivation, no cooling-off period.
+  - **No support/email/phone step and no redirect to the web** — Apple treats those as "not deletable from inside the app".
+  - Password re-authentication plus a destructive confirmation warning.
+  - An explicit list of what gets deleted; third-party grants (Instagram/Facebook) revoked on the platform side too.
 - [ ] **Permission purpose strings.** — 5.1.1(ii). **Bare-workflow trap:** if the `ios/` directory is committed, purpose strings in `app.json` do **not** propagate to `Info.plist` automatically. Check `Info.plist` by hand.
 - [ ] **Don't request permissions you don't need.** App B was rejected under 5.1.1 because `pickImage` called for full photo-library permission before opening the picker. Modern iOS PHPicker returns a single photo with **no permission at all** → delete the permission call.
+- [ ] **Are the legal links tappable?** — 2.1(a). App C was rejected here: the "by creating an account you agree to the Terms" sentence on the signup screen was **plain text**, and the login screen had no links at all, so the reviewer could not view the terms. Open them in an **in-app browser** (`expo-web-browser`) rather than kicking the user out to Safari, and put them on the login screen too.
 - [ ] **Location priming screen** — 5.1.1(iv). No leading button copy: "Use My Location" ❌ → "Continue" ✅. Don't ship two confusing "Skip" affordances.
 
 ### User-generated content (1.2) — mandatory if users can post anything
@@ -46,6 +51,12 @@ App A build 51 was rejected here. You need all four:
 - [ ] Blocking (two-way — a blocked user cannot write to you either).
 - [ ] Content filtering on **every** write endpoint, not just the obvious ones.
 - [ ] DM consent: the initiator can send one message until the recipient accepts.
+
+### Purchase signals (3.1.1) — the nastiest trap for free and B2B apps
+App C was rejected under this guideline **twice**.
+- [ ] **Leave no price, plan name, credit counter, paywall, upgrade button or outbound purchase link in the app.** What sank build 25 was a line reading "Intelligence isn't in your current plan — Solo or above required", a remaining credit counter, and a "1 credit per brand" label. Merely displaying a plan name is enough.
+- [ ] **Don't lean on the 3.1.3(f) "Free Stand-alone Apps" argument alone — Apple rejected it.** We tried it on build 26.
+- [ ] **A public signup screen destroys a B2B claim.** That was the weak link: a "join" screen reads as consumer self-service to a reviewer and directly contradicts 3.1.3(c)'s *"only sold directly by you to organizations"*. The fix in build 27 was **deleting the signup screen entirely** — the app offers sign-in only.
 
 ### Metadata
 - [ ] **Age rating** — 2.3.6. An app with any "meeting people / networking" angle needs `matureOrSuggestiveThemes` at least `INFREQUENT_OR_MILD`. Fixable over the API: `PATCH /v1/ageRatingDeclarations/{id}`.
@@ -85,11 +96,28 @@ App A build 51 was rejected here. You need all four:
 | **5.1.1(iv)** Location flow | leading priming screen | Button copy + duplicate skip | "Continue", single exit |
 | **5.1.1** Photo access | requesting library permission | PHPicker needed no permission | Permission call deleted |
 | **4.0.0** Design | "not integrated with built-in mapping" | Google-Maps-only handoff | Apple Maps option added |
+| **3.1.1** IAP | purchase signals in a free app | Plan name, credit counter, "Solo plan required" copy | Every price and plan trace removed |
+| **3.1.1** IAP (second time) | same guideline again | 3.1.3(f) argument wasn't enough; a **public signup screen** contradicted the B2B claim | Signup screen deleted, sign-in only |
+| **2.1(a)** App Completeness | couldn't view the terms | Legal text was plain, untappable; absent from the login screen | Tappable links opening in an in-app browser |
 | **Play** (production) | submission rejected | Declared privacy-policy URL returned 404 | Permanent alias + corrected console entry |
 
 **Note:** fixing one rejection can invite the next. One app went through four consecutive rejections, another three. After every fix, re-run the **entire** checklist.
 
 ---
+
+## App Store Connect API and declaration traps
+
+Found while filling submission fields over the API:
+
+- **There is no `APP_IPHONE_69` screenshot type.** The largest iPhone type the API accepts is `APP_IPHONE_67` (1290×2796). Images rendered at 1320×2868 for the 6.9" device are **rejected** — upload 6.7" and let Apple scale up.
+- **`whatsNew` cannot be edited on a first version** — 409, "cannot be edited at this time". It only exists for updates.
+- **Age-rating field types are mixed:** some are BOOLEAN (`messagingAndChat`, `userGeneratedContent`, `advertising`), others are STRING enums (`contests`, `profanityOrCrudeHumor` → `NONE` / `INFREQUENT_OR_MILD` / `FREQUENT_OR_INTENSE`). The wrong type returns 409, and the error message names the correct set.
+- **Apple changed the age bands in 2025: 12+ no longer exists.** The bands are 4+, 9+, 13+, 16+, 18+. Honest answers can yield 4+; raise it with `ageRatingOverrideV2` (e.g. `THIRTEEN_PLUS`).
+
+**App Privacy declaration:**
+- **A national ID number is not "Sensitive Info".** Apple's sensitive category covers race, religion, sexual orientation, biometrics and the like — a national ID isn't on that list, so **"Other Data Types"** is the correct bucket.
+- **If you store bank details (IBAN) in your own database, declare them Collected.** Apple only exempts you when the payment provider holds them and you cannot access them.
+- ⚠️ **Blind-clicking the wizard produces wrong answers.** The declaration flow renders at different heights per data type; clicking the same coordinates repeatedly produced answers like "User ID is used for tracking: YES" that were simply false. Screenshot and verify the final state of every item.
 
 ## Build and upload traps
 
@@ -104,6 +132,8 @@ App A build 51 was rejected here. You need all four:
   Put the `.p8` at `~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8` — altool reads it from there. Finishes in about 15 seconds.
 - **"Upload succeeded" ≠ accepted.** Apple can still reject during processing. Poll for `VALID`, and once valid, expire the previous build (`PATCH /v1/builds/{id}` with `{"expired": true}`).
 - **Watch and widget targets need an icon** (`CFBundleIconName`) or Apple refuses the upload with error **90713**.
+- **ITMS-90062** means "this version is already published" — bump the version string.
+- **ITMS-90863** (Apple Silicon symbol warning) is **normal for Expo apps and does not cause a rejection.** Don't chase it.
 
 ### Resubmission order
 1. **Two versions cannot be in review at once.** Cancel the existing `reviewSubmission` first (`canceled=true`) and wait for CANCELING → COMPLETE.
@@ -130,12 +160,20 @@ App A build 51 was rejected here. You need all four:
 
 ---
 
+### Play release errors
+- **"This release will not be available to existing users because it doesn't allow them to upgrade to the newly added app bundles."** → bump the version code, or better, publish through Internal/Closed testing first.
+- **"This release adds or removes no app bundles."** → the AAB didn't upload cleanly; check the version code and re-upload.
+- **Native debug symbols** must be a `native-debug-symbols.zip` with ABI directories (`armeabi-v7a/`, `arm64-v8a/`, `x86_64/`, each containing `libapp.so`) and no `__MACOSX` or `.DS_Store` entries.
+- ⚠️ **Target API level deadlines.** Play blocks publishing updates for apps that miss the deadline for raising their target API level. Track the date — release day is a bad time to find out.
+- **The AD_ID nuance:** Firebase Analytics requires the permission in the manifest and a matching "used" declaration; an app with no ads should have neither. **The rule is that the declaration must match the manifest exactly** — a mismatch in either direction blocks the release.
+
 ## Store registration — one-off, and manual
 
 - **You cannot create the App Store Connect app record over the API.** We tried and confirmed it. Do it in the browser.
 - **Creating the app in Play Console is also manual** the first time.
 - **The bundle ID is bound permanently to the record and cannot be changed.**
 - **Choosing "Free" in Play is irreversible** — you cannot switch to paid after publishing.
+- ⚠️ **Non-ASCII characters can be dropped at registration.** On an individual Apple account, the developer name shown on the App Store is your legal name — ours lost its Turkish diacritics during signup. Fixing it through App Store Connect → Business → Legal Entity **does not work**: that flow pulls you into address verification and the Paid Apps Agreement chain, and the name alone won't save. The working route is Apple Support → "Membership & Account" → legal-name correction, which is identity-verified. **Check the spelling character by character while registering.**
 - In Play Console the real path for in-app content pages is `app-content/**` (e.g. `app-content/ad-id-declaration`); `/app-content` alone redirects to the app list.
 
 ## Boundaries for an AI assistant running this playbook

@@ -24,10 +24,12 @@ We had handed the reviewer the rejection. The full write-up, and what to say ins
 
 ## What's inside
 
-- **Pre-submission checklist** — grouped by guideline (5.1.1 data & permissions, 1.2 user-generated content, 2.3.6 age rating, 4.0 design), plus what the reviewer will actually see and an Android section.
-- **Rejection catalogue** — twelve real rejections in a table: what the store said, the actual root cause, and the fix that cleared it.
+- **Pre-submission checklist** — grouped by guideline (5.1.1 data & permissions, 1.2 user-generated content, 3.1.1 purchase signals, 2.1(a) legal links, 2.3.6 age rating, 4.0 design), plus what the reviewer will actually see and an Android section.
+- **Rejection catalogue** — fifteen real rejections in a table: what the store said, the actual root cause, and the fix that cleared it.
 - **Build and upload traps** — the version train closing, altool vs. a hanging `eas submit`, the resubmission "swap trap" that silently ships your *old* build, Xcode auto-updates breaking the platform SDK, CocoaPods on Ruby 4.0, crashes that only appear in standalone builds.
-- **Store registration facts** — what genuinely cannot be automated, and which choices are irreversible.
+- **App Store Connect API and declaration traps** — the screenshot type that doesn't exist, `whatsNew` on a first version, mixed age-rating field types, the 2025 age-band change, and how blind-clicking the App Privacy wizard silently records false answers.
+- **Play release errors** — version-code refusals, native debug symbol packaging, target API level deadlines, and the advertising-ID declaration rule.
+- **Store registration facts** — what genuinely cannot be automated, which choices are irreversible, and how non-ASCII characters can be dropped from your legal name.
 
 ### A sample of the catalogue
 
@@ -37,10 +39,15 @@ We had handed the reviewer the rejection. The full write-up, and what to say ins
 | 1.2 User-generated content | no filtering / reporting / blocking | Reporting existed, but only behind an invisible long-press gesture |
 | 2.1 Demo account | couldn't sign in | The Watch target posted `email` while the backend read `identifier` |
 | 5.1.1 Photo access | requesting library permission | PHPicker never needed the permission we were asking for |
+| 3.1.1 In-app purchase | purchase signals in a free app | A plan name and a credit counter were still on screen |
+| 3.1.1 (again) | same guideline, second round | A public signup screen contradicted our own B2B argument |
+| 2.1(a) App Completeness | couldn't view the terms | The legal text was there — but as plain, untappable text |
 | 4.0.0 Design | "not integrated with built-in mapping" | We only handed users off to Google Maps |
 | Play (production) | submission rejected | The declared privacy-policy URL returned 404 |
 
 Fixing one rejection can invite the next. One app went through four consecutive rejections, another three — which is the real argument for a checklist.
+
+The catalogue is deliberately unglamorous: in most of these the rejection notice pointed somewhere other than the actual cause.
 
 ---
 
