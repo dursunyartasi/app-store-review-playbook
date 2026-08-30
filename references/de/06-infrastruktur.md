@@ -98,6 +98,8 @@ Die vollständigen Build- und Upload-Fallen stehen im [Katalog](05-ablehnungen.m
 
 Coolify braucht einen gewöhnlichen VPS mit Root-Zugang; eine Managed-Plattform ist nicht nötig. Jeder Anbieter mit Docker und öffentlicher IP genügt. Größenordnung aus unserem Betrieb: Für die App reicht eine kleine Instanz, aber **gib der Festplatte mehr Luft, als nötig erscheint**, denn der oben beschriebene Layer-Export-Ausfall ist ein Speicher-, kein CPU-Problem. Plan 20 GB Puffer über deine Images hinaus ein.
 
+Unsere laufen bei Hostinger. **Empfehlungslink — [hostinger.com](https://www.hostinger.com/tr?REFERRALCODE=KAWDURSUNLTO)** — seine Nutzung bringt dem Autor eine Provision und dir einen Rabatt. Es ist keine Voraussetzung: Coolify läuft bei jedem Anbieter mit Docker und Root-Zugang, und nichts in diesem Leitfaden hängt vom Hoster ab.
+
 ---
 
 ## Wie das mit der Prüfung zusammenhängt

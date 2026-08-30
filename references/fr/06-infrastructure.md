@@ -98,6 +98,8 @@ Les pièges complets de build et d'envoi sont dans le [catalogue](05-refus.md). 
 
 Coolify a besoin d'un VPS ordinaire avec accès root ; aucune plateforme managée n'est nécessaire. N'importe quel hébergeur avec Docker et une IP publique convient. Dimensionnement d'après ce que nous faisons tourner : une petite instance suffit pour l'application, mais **donne au disque plus de marge qu'il ne semble nécessaire**, car la panne d'export de couches décrite plus haut est un problème de disque, pas de CPU. Prévois 20 Go de marge au-delà de tes images.
 
+Les nôtres tournent chez Hostinger. **Lien de parrainage — [hostinger.com](https://www.hostinger.com/tr?REFERRALCODE=KAWDURSUNLTO)** — l'utiliser rapporte une commission à l'auteur et te donne une remise. Ce n'est pas une obligation : Coolify fonctionne chez n'importe quel hébergeur avec Docker et un accès root, et rien dans ce guide ne dépend de l'hébergeur.
+
 ---
 
 ## Le lien avec la revue

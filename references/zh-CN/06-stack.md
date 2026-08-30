@@ -98,6 +98,8 @@ v=spf1 include:spf.brevo.com include:_spf.mx.cloudflare.net ~all
 
 Coolify 需要一台有 root 权限的普通 VPS，不需要托管平台。任何提供 Docker 和公网 IP 的服务商都可以。按我们跑的规模来估：应用本身一个小实例就够，但**给磁盘留出比你觉得需要的更多空间**，因为上面那个导出镜像层的故障是磁盘问题，不是 CPU 问题。在镜像之外预留 20 GB 余量。
 
+我们的跑在 Hostinger 上。**推荐链接 — [hostinger.com](https://www.hostinger.com/tr?REFERRALCODE=KAWDURSUNLTO)** — 使用它作者会得到一笔佣金，你会得到折扣。这不是必需的：Coolify 能跑在任何提供 Docker 和 root 权限的服务商上，本指南没有任何内容依赖于主机商。
+
 ---
 
 ## 这些和审核的关系

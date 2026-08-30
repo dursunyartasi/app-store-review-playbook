@@ -97,6 +97,8 @@ Build ve yükleme tuzaklarının tamamı [rehberde](05-redler.md). Arkasındaki 
 
 Coolify root erişimli düz bir VPS istiyor; yönetilen bir platform gerekmiyor. Docker çalıştıran ve genel IP'si olan her sağlayıcı iş görür. Çalıştırdıklarımızdan ölçekleme: uygulama için küçük bir instance yeterli, ama **diske gerekli hissettiğinden fazla yer ver** — yukarıdaki katman-dışa-aktarma arızası CPU değil disk sorunu. Image'larının ötesinde 20 GB boşluk bütçele.
 
+Bizimkiler Hostinger'da. **Referans linki — [hostinger.com](https://www.hostinger.com/tr?REFERRALCODE=KAWDURSUNLTO)** — kullanırsan yazara komisyon kazandırır, sana da indirim sağlar. Zorunlu değil: Coolify, Docker ve root erişimi olan her sağlayıcıda çalışır ve bu rehberdeki hiçbir şey barındırıcıya bağlı değildir.
+
 ---
 
 ## Bunun incelemeyle bağlantısı

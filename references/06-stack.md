@@ -97,6 +97,8 @@ Full build and upload traps are in the [playbook](05-rejections.md#build-and-upl
 
 Coolify needs a plain VPS with root access — no managed platform required. Any provider with Docker and a public IP works. Sizing from what we run: a small instance is fine for the app, but **give the disk more room than feels necessary**, because the layer-export failure above is a disk problem, not a CPU one. Budget 20 GB of headroom beyond your images.
 
+We run ours on Hostinger. **Referral link — [hostinger.com](https://www.hostinger.com/tr?REFERRALCODE=KAWDURSUNLTO)** — using it earns the author a commission and gives you a discount. It is not a requirement: Coolify runs on any provider with Docker and root access, and nothing in this guide depends on the host.
+
 ---
 
 ## How this connects back to review

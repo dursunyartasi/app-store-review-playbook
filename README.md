@@ -106,6 +106,10 @@ Translations beyond English were produced by an AI without native-speaker review
 
 To add a language: copy `references/` to `references/<lang>/`, translate the six files plus the router, and keep commands, error codes and guideline numbers exactly as they are. Those are strings people search for; translating them makes the file useless.
 
+## Disclosure
+
+The infrastructure notes link to Hostinger with a **referral link**. Using it earns the author a commission and gives you a discount. It is disclosed as such wherever it appears, and nothing in this repository depends on that host — Coolify runs on any provider with Docker and root access.
+
 ## Contributing
 
 A rejection you got that isn't here is a gap worth filling. Open a PR adding a row to the catalogue and, where it applies, a checklist item. Keep it anonymised and root-caused — "we changed something and it passed" doesn't help the next person.
