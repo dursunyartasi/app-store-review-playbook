@@ -33,7 +33,7 @@ references/
   04-app-store-submission.md          metadata, age rating, privacy, review notes, resubmission
   05-rejections.md                    the catalogue: 15 rejections with root causes
   06-stack.md                         the infrastructure underneath, and how it broke
-  tr/  es/  pt-BR/  zh-CN/            full translations of all six
+  tr/  es/  pt-BR/  zh-CN/  ru/       full translations of all six
 ```
 
 You read one file, not all of them.
@@ -96,6 +96,7 @@ English is canonical. Translations live in `references/<lang>/` with a matching 
 | Español | complete |
 | Português (BR) | complete |
 | 简体中文 | complete |
+| Русский | complete |
 
 Translations beyond English were produced by an AI without native-speaker review. They are faithful to the English, but if a phrasing reads oddly to you, a correction PR is genuinely welcome.
 
