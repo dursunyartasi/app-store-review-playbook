@@ -35,7 +35,17 @@ docker system df           # look first
 docker builder prune -af   # build cache is the safe thing to delete
 ```
 
-Build cache is safe to clear (the next build is just slower). Images are mostly referenced, so pruning them frees little. **Never touch volumes — that's your application data.** On one incident this took the disk from 92% to 83% and freed 7.6 GB; the deploy then succeeded on retry.
+Pruning is **not symmetric**, and getting it backwards costs a deploy:
+
+- `docker image prune -af` — safe at any time.
+- `docker builder prune -af` — **never right before a deploy.** It deletes the
+  build cache, so the `apt-get` layer re-runs and re-downloads packages; one
+  transient network hiccup then kills the build. Off the deploy path it is the
+  most effective thing you have.
+
+Images are mostly referenced, so pruning them frees little. More Coolify failure
+modes, including three unrelated causes that produce an identical error, are in
+the [Coolify operations playbook](https://github.com/dursunyartasi/coolify-operations-playbook). **Never touch volumes — that's your application data.** On one incident this took the disk from 92% to 83% and freed 7.6 GB; the deploy then succeeded on retry.
 
 The same disk pressure also shows up as a transient `No such container: <uuid>` when a build helper dies mid-build. Memory pressure produces the same symptom, so check both.
 

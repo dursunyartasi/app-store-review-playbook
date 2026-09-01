@@ -36,7 +36,17 @@ docker system df           # regarde d'abord
 docker builder prune -af   # le cache de build est ce qu'on peut supprimer sans risque
 ```
 
-Le cache de build se vide sans risque (le build suivant sera un peu plus lent). Les images sont pour la plupart référencées, les purger libère peu. **Ne touche pas aux volumes — ce sont les données de ton application.** Lors d'un incident, cela a fait passer le disque de 92 % à 83 % et libéré 7,6 Go ; le déploiement est passé à la nouvelle tentative.
+Le nettoyage **n'est pas symétrique**, et l'inverser coûte un déploiement :
+
+- `docker image prune -af` — sûr à tout moment.
+- `docker builder prune -af` — **jamais juste avant un déploiement.** Il efface
+  le cache de build, la couche `apt-get` se relance et retélécharge les paquets ;
+  un seul accroc réseau tue alors le build. Hors du chemin de déploiement, c'est
+  l'outil le plus efficace dont tu disposes.
+
+Les images sont pour la plupart référencées, les purger libère peu. D'autres
+modes de défaillance de Coolify, dont trois causes distinctes produisant une
+erreur identique, dans le [manuel d'exploitation Coolify](https://github.com/dursunyartasi/coolify-operations-playbook). **Ne touche pas aux volumes — ce sont les données de ton application.** Lors d'un incident, cela a fait passer le disque de 92 % à 83 % et libéré 7,6 Go ; le déploiement est passé à la nouvelle tentative.
 
 Cette même pression disque se manifeste aussi par un `No such container: <uuid>` passager quand un conteneur auxiliaire meurt en cours de build. Le manque de mémoire produit le même symptôme, alors vérifie les deux.
 

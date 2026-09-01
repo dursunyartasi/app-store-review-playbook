@@ -33,10 +33,17 @@ En cuanto el disco del servidor pasa aproximadamente del **80 %**, los despliegu
 
 ```bash
 docker system df           # mira primero
-docker builder prune -af   # la caché de compilación es lo que se puede borrar sin riesgo
+docker builder prune -af   # solo cuando NO hay un despliegue en curso
 ```
 
-La caché de compilación se puede limpiar sin problema (la siguiente compilación será algo más lenta). Las imágenes suelen estar referenciadas, así que podarlas libera poco. **No toques los volúmenes: son los datos de tu aplicación.** En un incidente esto llevó el disco del 92 % al 83 % y liberó 7,6 GB; el despliegue funcionó al reintentar.
+La limpieza **no es simétrica**, y hacerlo al revés cuesta un despliegue:
+`docker image prune -af` es seguro en cualquier momento; `docker builder prune -af`
+**nunca justo antes de un despliegue** — borra el caché, la capa `apt-get` se
+vuelve a ejecutar y descarga paquetes, y un solo tropiezo de red mata la
+compilación. Fuera de la ruta de despliegue es lo más efectivo que tienes. Las
+imágenes suelen estar referenciadas, así que podarlas libera poco. Más modos de
+fallo de Coolify, incluidas tres causas distintas con un error idéntico, en el
+[manual de operaciones de Coolify](https://github.com/dursunyartasi/coolify-operations-playbook). **No toques los volúmenes: son los datos de tu aplicación.** En un incidente esto llevó el disco del 92 % al 83 % y liberó 7,6 GB; el despliegue funcionó al reintentar.
 
 Esa misma presión de disco aparece también como un `No such container: <uuid>` transitorio cuando un contenedor auxiliar muere a mitad de compilación. La presión de memoria produce el mismo síntoma, así que revisa las dos cosas.
 

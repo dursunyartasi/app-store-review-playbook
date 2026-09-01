@@ -35,7 +35,16 @@ docker system df           # önce bak
 docker builder prune -af   # güvenle silinebilecek olan build cache'idir
 ```
 
-Build cache güvenle temizlenir (sonraki build biraz yavaşlar). Image'ların çoğu referanslı olduğu için image prune az yer açar. **Volume'lara DOKUNMA — onlar uygulama verisi.** Bir olayda bu, diski %92'den %83'e indirip 7,6 GB açtı; deploy tekrar denemede geçti.
+Temizlik **simetrik değil** ve tersini yapmak bir deploy'a mal oluyor:
+
+- `docker image prune -af` — her zaman güvenli.
+- `docker builder prune -af` — **deploy'dan hemen önce asla.** Build cache'ini
+  siler, `apt-get` katmanı yeniden çalışıp paketleri indirir; tek bir geçici ağ
+  tökezlemesi build'i düşürür. Deploy yolunun dışındaysan elindeki en etkili araç.
+
+Image'ların çoğu referanslı olduğu için image prune az yer açar. Daha fazla
+Coolify arıza modu — aynı hatayı üreten üç ayrı sebep dahil —
+[Coolify işletim rehberinde](https://github.com/dursunyartasi/coolify-operations-playbook). **Volume'lara DOKUNMA — onlar uygulama verisi.** Bir olayda bu, diski %92'den %83'e indirip 7,6 GB açtı; deploy tekrar denemede geçti.
 
 Aynı disk baskısı, build yardımcı konteyneri build ortasında ölünce geçici `No such container: <uuid>` olarak da görünüyor. Bellek baskısı da aynı belirtiyi veriyor, ikisine birden bak.
 

@@ -36,7 +36,18 @@ docker system df           # erst nachsehen
 docker builder prune -af   # der Build-Cache ist das, was sich gefahrlos löschen lässt
 ```
 
-Der Build-Cache lässt sich gefahrlos leeren (der nächste Build ist etwas langsamer). Images sind meist referenziert, ihr Aufräumen bringt wenig. **Fass die Volumes nicht an — das sind deine Anwendungsdaten.** Bei einem Vorfall brachte das die Platte von 92 % auf 83 % und schaffte 7,6 GB Luft; der Deploy lief beim erneuten Versuch durch.
+Aufräumen ist **nicht symmetrisch**, und es falsch herum zu machen kostet ein
+Deployment:
+
+- `docker image prune -af` — jederzeit sicher.
+- `docker builder prune -af` — **nie direkt vor einem Deployment.** Es löscht
+  den Build-Cache, die `apt-get`-Schicht läuft erneut und lädt Pakete neu; ein
+  einziger Netzwerkaussetzer killt dann den Build. Abseits des Deployment-Pfads
+  ist es das Wirksamste, was du hast.
+
+Images sind meist referenziert, ihr Aufräumen bringt wenig. Weitere
+Coolify-Fehlermodi, darunter drei verschiedene Ursachen mit identischem
+Fehlerbild, im [Coolify-Betriebshandbuch](https://github.com/dursunyartasi/coolify-operations-playbook). **Fass die Volumes nicht an — das sind deine Anwendungsdaten.** Bei einem Vorfall brachte das die Platte von 92 % auf 83 % und schaffte 7,6 GB Luft; der Deploy lief beim erneuten Versuch durch.
 
 Derselbe Speicherdruck zeigt sich auch als vorübergehendes `No such container: <uuid>`, wenn ein Hilfscontainer mitten im Build stirbt. Speicherknappheit erzeugt dasselbe Symptom, also prüfe beides.
 
