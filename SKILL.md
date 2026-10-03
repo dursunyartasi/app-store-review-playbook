@@ -1,6 +1,6 @@
 ---
 name: mobile-app-shipping
-description: End-to-end guide for building and shipping a mobile app to the App Store and Google Play, written from real rejections and real build failures. Use when the user wants to start a mobile app prototype, set up Expo/React Native, build an IPA or AAB, upload to TestFlight, upload to Google Play, submit for App Store review, write App Review notes, fill store declarations, or fix a store rejection. Also triggers on - "app rejected", "Guideline", "App Review", "TestFlight", "eas build", "eas submit", "altool", "provisioning profile", "AAB", "Play Console", "App Store Connect", "age rating", "privacy declaration", "app store screenshots".
+description: End-to-end guide for building and shipping a mobile app to the App Store and Google Play, written from real rejections and real build failures. Use when the user wants to start a mobile app prototype, set up Expo/React Native, build an IPA or AAB, upload to TestFlight, upload to Google Play, submit for App Store review, write App Review notes, fill store declarations, or fix a store rejection. Also triggers on - "app rejected", "Guideline", "App Review", "TestFlight", "eas build", "eas submit", "altool", "provisioning profile", "AAB", "keystore", "versionCode", "version code already used", "closed testing", "12 testers", "Data safety", "advertising ID", "SHA-1", "Google Sign-In", "FCM", "emulator", "prebuild", "Play Console", "App Store Connect", "age rating", "privacy declaration", "app store screenshots".
 metadata:
   version: 2.0.0
   source: 8 shipped iOS/Android apps, 2026
@@ -27,7 +27,8 @@ Then go to the matching file. Read only that one.
 |---|---|
 | new prototype | `references/01-prototype.md` |
 | build / TestFlight | `references/02-testflight-ios.md` |
-| Google Play | `references/03-google-play.md` |
+| Google Play Console, declarations, Play review | `references/03-google-play.md` |
+| Android build, signing, emulator, Google Sign-In, push | `references/07-android-build.md` |
 | submit for review | `references/04-app-store-submission.md` |
 | rejected | `references/05-rejections.md` |
 | backend, database, email | `references/06-stack.md` |

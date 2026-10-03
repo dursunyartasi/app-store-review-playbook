@@ -28,6 +28,7 @@ metadata:
 | новый прототип | `references/ru/01-prototype.md` |
 | сборка / TestFlight | `references/ru/02-testflight-ios.md` |
 | Google Play | `references/ru/03-google-play.md` |
+| Android build / signing / emulator (English) | `references/07-android-build.md` |
 | отправить на ревью | `references/ru/04-app-store-submission.md` |
 | меня отклонили | `references/ru/05-rejections.md` |
 | бэкенд, база, почта | `references/ru/06-stack.md` |

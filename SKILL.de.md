@@ -28,6 +28,7 @@ Dann geh zur passenden Datei. Lies nur diese eine.
 | neuer Prototyp | `references/de/01-prototyp.md` |
 | bauen / TestFlight | `references/de/02-testflight-ios.md` |
 | Google Play | `references/de/03-google-play.md` |
+| Android build / signing / emulator (English) | `references/07-android-build.md` |
 | zur Prüfung einreichen | `references/de/04-app-store-einreichung.md` |
 | ich wurde abgelehnt | `references/de/05-ablehnungen.md` |
 | Backend, Datenbank, E-Mail | `references/de/06-infrastruktur.md` |

@@ -1,6 +1,6 @@
 # App Store & Play inceleme rehberi
 
-Bu dosya genel mağaza tavsiyesi değil. Her madde sekiz uygulamanın yayın sürecinde **gerçekten yaşandı** ve sonunda bulunan kök nedeniyle birlikte yazıldı. Uygulamalar anonim: **A Uygulaması** (sosyal etkinlik), **B Uygulaması** (harita/mekan rehberi), **C Uygulaması** (B2B ajans aracı).
+Bu dosya genel mağaza tavsiyesi değil. Her madde sekiz uygulamanın yayın sürecinde **gerçekten yaşandı** ve sonunda bulunan kök nedeniyle birlikte yazıldı. Uygulamalar anonim: **A Uygulaması** (sosyal etkinlik), **B Uygulaması** (harita/mekan rehberi), **C Uygulaması** (B2B ajans aracı), **D Uygulaması** (burs platformu).
 
 **Kullanım:** Gönderimden önce "Gönderim öncesi kontrol listesi"ni uygula. Red geldiyse "Red kataloğu"ndan eşleşeni bul. Build/yükleme takılıyorsa "Build ve yükleme tuzakları"na bak.
 
@@ -69,6 +69,10 @@ C Uygulaması bu maddeden **iki kez** reddedildi.
 - [ ] **Dağıtım ülkeleri.** Bir uygulamamız üretimde kazara **1 ülkeye** kilitliydi (iOS 175 ülkedeyken). Üretim → Ülkeler/bölgeler.
 - [ ] **Arka plan konumu** kullanıyorsan Play "Konum İzni Beyanı" isteyebilir.
 - [ ] **Maps API anahtarı** `app.json > android.config.googleMaps.apiKey` — YOKSA `react-native-maps` Android'de native init'te **çöker**. iOS'ta çalışır (orada Apple Maps varsayılan), o yüzden gözden kaçar.
+- [ ] **Play demo hesabı 2FA'sız çalışıyor mu?** Play, D Uygulamasının üretim gönderimini reddetti çünkü inceleme hesabında çok faktörlü doğrulama açıktı ve reviewer e-postayla gelen kod ekranına takıldı — talimatlarda "2FA yok" yazarken. Hesabın veritabanındaki gerçek bayrağını kontrol et, sonra temiz bir cihazdan giriş yap.
+- [ ] **Sosyal giriş Play-imzalı build'de çalışıyor mu?** Aynı reddin kanıt ekranında Google butonu 400 veriyordu: uygulama Android istemcisiyle tarayıcı OAuth akışı kullanıyordu ve bu hiçbir zaman çalışmaz (`07-android-derleme.md`).
+- [ ] **Veri güvenliğinde canlı bir hesap silme URL'si var mı** — herkese açık, yayında, 200 dönen. Google bu adresi çekip kontrol ediyor.
+- [ ] **AAB'yi hangi anahtar imzaladı?** `keytool -printcert -jarfile app.aab` — debug imzalı paket de `jarsigner -verify`'dan geçiyor.
 - [ ] **Google ile Giriş için İKİ SHA-1** gerekiyor: yükleme anahtarı + **Play uygulama imzalama anahtarı**. Play kendi anahtarını AAB yüklendikten sonra üretir; o SHA-1 Android OAuth istemcisine eklenmezse Play sürümünde Google girişi çalışmaz. Emülatörde de basılamaz (debug SHA-1 kayıtlı değil) — fonksiyonel test yalnız Play-imzalı cihazda.
 
 ---
@@ -92,6 +96,7 @@ C Uygulaması bu maddeden **iki kez** reddedildi.
 | **3.1.1** IAP (2. kez) | aynı madde tekrar | 3.1.3(f) argümanı yetmedi; **açık kayıt ekranı** B2B iddiasını çürütüyordu | Kayıt ekranı tamamen silindi, yalnız giriş |
 | **2.1(a)** App Completeness | koşullar görüntülenemedi | Yasal metin düz yazıydı, tıklanamıyordu; giriş ekranında hiç yoktu | Uygulama içi tarayıcıda açılan tıklanabilir bağlantılar |
 | **Play** (üretim) | gönderim reddi | Gizlilik politikası URL'si 404 | Kalıcı takma ad + konsol kaydı düzeltildi |
+| **Play** Uygulama erişimi | "multi-factor authentication blocks access" | Demo hesapta 2FA açıktı; talimat kapalı diyordu. Kanıtta Google butonu da 400 veriyordu (Android istemcisiyle tarayıcı OAuth) | Demo hesapta 2FA kapatıldı, native Google Sign-In, iki Android OAuth istemcisi |
 
 **Not:** Bir redi çözerken bir sonrakini davet edebilirsin. Bir uygulamada 4 ardışık red oldu, bir diğerinde 3. Her düzeltmeden sonra listenin TAMAMINI yeniden gözden geçir.
 
@@ -154,7 +159,8 @@ Gönderim alanlarını API'den doldururken çıkanlar:
 
 ### Play sürüm hataları
 - **"Bu sürüm, mevcut kullanıcıların yeni eklenen uygulama paketlerine geçmelerine izin vermediği için kullanıma sunulamaz."** → sürüm kodunu artır, ya da (önerilen) İç Test / Kapalı Test kanalını kullan.
-- **"Bu sürüm hiçbir uygulama paketi eklemiyor veya kaldırmıyor."** → AAB düzgün yüklenmemiş; sürüm kodunu kontrol et ve yeniden yükle.
+- **"Sürüm kodu N daha önce kullanıldı."** → bir kod, yayınlanmamış bir taslak da olsa *herhangi* bir yüklemede harcanıyor. `app.json`'da artırdıysan prebuild çalışmamış, `android/app/build.gradle` eski kodu taşıyor.
+- **"Bu sürüm hiçbir uygulama paketi eklemiyor veya kaldırmıyor."** → AAB taslağa bağlanmamış; App bundle gezgininde olabilir — sürümde **Kitaplıktan ekle** kullan.
 - **Native debug sembolleri** `native-debug-symbols.zip` içinde ABI klasörleriyle olmalı (`armeabi-v7a/`, `arm64-v8a/`, `x86_64/`, her birinde `libapp.so`). ZIP'te `__MACOSX` veya `.DS_Store` olmamalı.
 - ⚠️ **Hedef API düzeyi son tarihi.** Play belirli bir tarihe kadar hedef API düzeyini yükseltmeyen uygulamalarda **güncelleme yayınlamayı engelliyor** (bize bir son-tarih uyarısı geldi). Takvimini takip et — sürüm gününde öğrenmek istemezsin.
 - **AD_ID nüansı:** Firebase Analytics kullanıyorsan izin manifest'te olmalı ve beyan "kullanılıyor" demeli; reklamın yoksa izin de beyan da olmamalı. **Kural: beyan manifest'le birebir tutarlı olsun** — iki yönde de hata yayını kilitliyor.

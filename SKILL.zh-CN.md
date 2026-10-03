@@ -30,6 +30,7 @@ metadata:
 | 新原型 | `references/zh-CN/01-prototype.md` |
 | 编译 / TestFlight | `references/zh-CN/02-testflight-ios.md` |
 | Google Play | `references/zh-CN/03-google-play.md` |
+| Android build / signing / emulator (English) | `references/07-android-build.md` |
 | 提交审核 | `references/zh-CN/04-app-store-submission.md` |
 | 我被拒了 | `references/zh-CN/05-rejections.md` |
 | 后端、数据库、邮件 | `references/zh-CN/06-stack.md` |

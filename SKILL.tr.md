@@ -1,6 +1,6 @@
 ---
 name: mobile-app-shipping-tr
-description: Mobil uygulamayı sıfırdan App Store ve Google Play'e taşıma rehberi - gerçek redlerden ve gerçek build hatalarından yazıldı. Şunlarda kullan - mobil prototip başlatma, Expo/React Native kurulumu, IPA veya AAB derleme, TestFlight'a yükleme, Google Play'e yükleme, App Store incelemesine gönderme, App Review notu yazma, mağaza beyanlarını doldurma, mağaza reddini çözme. Ayrıca - "uygulama reddedildi", "Guideline", "App Review", "TestFlight", "eas build", "altool", "provisioning profile", "AAB", "Play Console", "App Store Connect", "yaş derecelendirme", "gizlilik beyanı", "ekran görüntüsü".
+description: Mobil uygulamayı sıfırdan App Store ve Google Play'e taşıma rehberi - gerçek redlerden ve gerçek build hatalarından yazıldı. Şunlarda kullan - mobil prototip başlatma, Expo/React Native kurulumu, IPA veya AAB derleme, TestFlight'a yükleme, Google Play'e yükleme, App Store incelemesine gönderme, App Review notu yazma, mağaza beyanlarını doldurma, mağaza reddini çözme. Ayrıca - "uygulama reddedildi", "Guideline", "App Review", "TestFlight", "eas build", "altool", "provisioning profile", "AAB", "keystore", "versionCode", "sürüm kodu daha önce kullanıldı", "kapalı test", "12 test kullanıcısı", "Veri güvenliği", "Reklam kimliği", "SHA-1", "Google ile Giriş", "FCM", "emülatör", "prebuild", "Play Console", "App Store Connect", "yaş derecelendirme", "gizlilik beyanı", "ekran görüntüsü".
 metadata:
   version: 2.0.0
   kaynak: 8 yayınlanmış iOS/Android uygulaması, 2026
@@ -27,7 +27,8 @@ Sonra eşleşen dosyaya git. Yalnız onu oku.
 |---|---|
 | yeni prototip | `references/tr/01-prototip.md` |
 | derleme / TestFlight | `references/tr/02-testflight-ios.md` |
-| Google Play | `references/tr/03-google-play.md` |
+| Google Play Console, beyanlar, Play incelemesi | `references/tr/03-google-play.md` |
+| Android derleme, imzalama, emülatör, Google ile Giriş, push | `references/tr/07-android-derleme.md` |
 | incelemeye gönderme | `references/tr/04-app-store-gonderim.md` |
 | red yedim | `references/tr/05-redler.md` |
 | arka uç, veritabanı, e-posta | `references/tr/06-yigin.md` |

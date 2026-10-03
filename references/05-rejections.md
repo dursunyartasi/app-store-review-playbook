@@ -1,6 +1,6 @@
 # App Store & Play review playbook
 
-Not generic store advice. Every item below is a rejection that actually happened while shipping eight apps, with the root cause we eventually found. Apps are anonymised as **App A** (social events), **App B** (map/venue guide), **App C** (B2B agency tool).
+Not generic store advice. Every item below is a rejection that actually happened while shipping eight apps, with the root cause we eventually found. Apps are anonymised as **App A** (social events), **App B** (map/venue guide), **App C** (B2B agency tool), **App D** (scholarship platform).
 
 **How to use:** run the pre-submission checklist before you submit. If you got rejected, find the match in the rejection catalogue. If a build or upload is stuck, check the traps section.
 
@@ -69,6 +69,10 @@ App C was rejected under this guideline **twice**.
 - [ ] **Distribution countries.** One of our apps was accidentally locked to a **single country** in production while iOS shipped to 175. Production → Countries/regions.
 - [ ] **Background location** may trigger Play's Location Permission Declaration.
 - [ ] **Maps API key** in `app.json > android.config.googleMaps.apiKey` — without it `react-native-maps` **crashes at native init on Android**. iOS is fine (Apple Maps is the default there), which is exactly why this slips through.
+- [ ] **Does the Play demo account work without 2FA?** Play rejected App D because the review account had multi-factor auth on and the reviewer hit an emailed code screen — while the instructions said "No 2FA". Check the account's actual flag, then sign in from a clean device.
+- [ ] **Does social login work in the Play-signed build?** The same rejection's evidence showed the Google button failing with a 400: the app used a browser OAuth flow with an Android client, which never works (`07-android-build.md`).
+- [ ] **Data safety has a live account-deletion URL** — public, deployed, returning 200. Google fetches it.
+- [ ] **Which key signed the AAB?** `keytool -printcert -jarfile app.aab` — a debug-signed bundle passes `jarsigner -verify`.
 - [ ] **Google Sign-In needs TWO SHA-1s:** your upload key **and** the Play app-signing key. Play generates its signing key only after the first AAB upload; if that SHA-1 isn't added to the Android OAuth client, Google Sign-In is broken in the Play build. It also can't be tested on an emulator (the debug SHA-1 isn't registered) — functional testing requires a Play-signed build on a device.
 
 ---
@@ -92,6 +96,7 @@ App C was rejected under this guideline **twice**.
 | **3.1.1** IAP (second time) | same guideline again | 3.1.3(f) argument wasn't enough; a **public signup screen** contradicted the B2B claim | Signup screen deleted, sign-in only |
 | **2.1(a)** App Completeness | couldn't view the terms | Legal text was plain, untappable; absent from the login screen | Tappable links opening in an in-app browser |
 | **Play** (production) | submission rejected | Declared privacy-policy URL returned 404 | Permanent alias + corrected console entry |
+| **Play** App access | "multi-factor authentication blocks access" | Demo account had 2FA on; the instructions said it didn't. Evidence also showed the Google button failing (browser OAuth with an Android client) | 2FA off on the demo account, native Google Sign-In, two Android OAuth clients |
 
 **Note:** fixing one rejection can invite the next. One app went through four consecutive rejections, another three. After every fix, re-run the **entire** checklist.
 
@@ -154,7 +159,8 @@ Found while filling submission fields over the API:
 
 ### Play release errors
 - **"This release will not be available to existing users because it doesn't allow them to upgrade to the newly added app bundles."** → bump the version code, or better, publish through Internal/Closed testing first.
-- **"This release adds or removes no app bundles."** → the AAB didn't upload cleanly; check the version code and re-upload.
+- **"Version code N has already been used."** → a code is consumed by *any* upload, even an unpublished draft. If you did bump it in `app.json`, prebuild didn't run and `android/app/build.gradle` still has the old one.
+- **"This release adds or removes no app bundles."** → the AAB didn't attach; it may be in App bundle explorer already — use **Add from library**.
 - **Native debug symbols** must be a `native-debug-symbols.zip` with ABI directories (`armeabi-v7a/`, `arm64-v8a/`, `x86_64/`, each containing `libapp.so`) and no `__MACOSX` or `.DS_Store` entries.
 - ⚠️ **Target API level deadlines.** Play blocks publishing updates for apps that miss the deadline for raising their target API level. Track the date — release day is a bad time to find out.
 - **The AD_ID nuance:** Firebase Analytics requires the permission in the manifest and a matching "used" declaration; an app with no ads should have neither. **The rule is that the declaration must match the manifest exactly** — a mismatch in either direction blocks the release.

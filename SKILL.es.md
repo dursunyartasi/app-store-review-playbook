@@ -28,6 +28,7 @@ Después ve al archivo correspondiente. Lee solo ese.
 | prototipo nuevo | `references/es/01-prototipo.md` |
 | compilar / TestFlight | `references/es/02-testflight-ios.md` |
 | Google Play | `references/es/03-google-play.md` |
+| Android build / signing / emulator (English) | `references/07-android-build.md` |
 | enviar a revisión | `references/es/04-envio-app-store.md` |
 | me han rechazado | `references/es/05-rechazos.md` |
 | backend, base de datos, correo | `references/es/06-infraestructura.md` |

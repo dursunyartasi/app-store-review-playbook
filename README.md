@@ -29,11 +29,12 @@ SKILL.md                              the router - asks where you are, sends you
 references/
   01-prototype.md                     zero to an app on your phone, built to pass review
   02-testflight-ios.md                build, sign, upload, and the errors by code
-  03-google-play.md                   keystore, SHA-1s, AAB, declarations that block releases
+  03-google-play.md                   Play Console: closed testing, SHA-1s, every declaration that blocked us, Play review
   04-app-store-submission.md          metadata, age rating, privacy, review notes, resubmission
-  05-rejections.md                    the catalogue: 15 rejections with root causes
+  05-rejections.md                    the catalogue: 16 rejections with root causes
   06-stack.md                         the infrastructure underneath, and how it broke
-  tr/ es/ pt-BR/ zh-CN/ ru/ de/ fr/   full translations of all six
+  07-android-build.md                 Expo prebuild traps, signing, AAB checks, emulator, Google Sign-In, FCM
+  tr/ es/ pt-BR/ zh-CN/ ru/ de/ fr/   translations (tr complete; others lag on Android)
 ```
 
 You read one file, not all of them.
@@ -51,6 +52,7 @@ You read one file, not all of them.
 | 5.1.1 Photo access | requesting library permission | The modern picker never needed the permission we asked for |
 | 4.0.0 Design | "not integrated with built-in mapping" | We only handed users off to Google Maps |
 | Play (production) | submission rejected | The declared privacy-policy URL returned 404 |
+| Play App access | "multi-factor authentication blocks access" | The demo account had 2FA on; our own instructions said it didn't |
 
 One app went through four consecutive rejections, another three. Fixing one can expose the next — which is the entire argument for a checklist.
 
@@ -82,7 +84,7 @@ Not using Claude Code? Start at [SKILL.md](SKILL.md) and follow the table.
 
 - **Sources are anonymised.** Apps appear as App A / B / C. No bundle IDs, keys, SHA-1 fingerprints, submission IDs, IP addresses or account details appear anywhere in this repository.
 - **Dated to 2026.** Store guidelines move, and Apple changed the age bands in 2025 alone. Treat specific guideline numbers as a place to start your own reading, not as current law.
-- **It is not exhaustive.** It covers what we hit. We never had a 4.3 spam rejection or a Play policy violation, so there is nothing here about either.
+- **It is not exhaustive.** It covers what we hit. We never had a 4.3 spam rejection or a Play policy violation (our Play rejections were about access and a dead URL), so there is nothing here about either.
 - **It is opinionated about a stack** — Expo, Coolify, PostgreSQL, Brevo. Most of the store material applies whatever you use; the infrastructure notes are specific.
 
 ## Translations
@@ -93,18 +95,18 @@ English is canonical. Translations live in `references/<lang>/` with a matching 
 |---|---|
 | English | canonical |
 | Türkçe | complete |
-| Español | complete |
-| Português (BR) | complete |
-| 简体中文 | complete |
-| Русский | complete |
-| Deutsch | complete |
-| Français | complete |
+| Español | complete except the October 2026 Android update — use English `03-google-play.md` and `07-android-build.md` |
+| Português (BR) | complete except the October 2026 Android update — use English `03-google-play.md` and `07-android-build.md` |
+| 简体中文 | complete except the October 2026 Android update — use English `03-google-play.md` and `07-android-build.md` |
+| Русский | complete except the October 2026 Android update — use English `03-google-play.md` and `07-android-build.md` |
+| Deutsch | complete except the October 2026 Android update — use English `03-google-play.md` and `07-android-build.md` |
+| Français | complete except the October 2026 Android update — use English `03-google-play.md` and `07-android-build.md` |
 
 Translations beyond English were produced by an AI without native-speaker review. They are faithful to the English, but if a phrasing reads oddly to you, a correction PR is genuinely welcome.
 
 **Translations may lag.** When a new rejection lands, English is updated first. If you read a translation and something looks thin, check the English file — and a PR closing the gap is welcome.
 
-To add a language: copy `references/` to `references/<lang>/`, translate the six files plus the router, and keep commands, error codes and guideline numbers exactly as they are. Those are strings people search for; translating them makes the file useless.
+To add a language: copy `references/` to `references/<lang>/`, translate the seven files plus the router, and keep commands, error codes and guideline numbers exactly as they are. Those are strings people search for; translating them makes the file useless.
 
 ## Disclosure
 
